@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>One question 💌</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-mood="shy">
+  <main>
+    <div class="progress">💗 💗 💗 💗 🤍</div>
+    <h1> 
+      <span class="her-name"></span>, Do you love me? 💌
+    </h1>
+    <p class="sub">- <span class="your-name"></span> 🧸</p>
+
+    <div class="bubble">Teddy is very nervous... 🥺👉👈</div>
+    <div class="bear-wrap"></div>
+
+    <div class="btn-row">
+      <a class="btn" id="yes" href="yes.html" data-mood="love" data-say="YESSS!! 💖💖💖" data-hover="Pleaaase say yes! 🥹💗" data-confetti="1">Yes! 💖</a>
+      <button class="btn soft" id="maybe" data-mood="shy" data-hover="Hmm? Really? 🥺" data-stay="1">Maybe? 🤔</button>
+      <button class="btn soft dodge" id="no" data-mood="sad" data-hover="Nooo don't press that 😭" data-stay="1">No 💔</button>
+    </div>
+    <p class="note">(psst... the "No" button is shy and doesn't like being clicked 😉)</p>
+  </main>
+  <script src="config.js"></script>
+  <script src="bear.js"></script>
+  <script>
+    // "No" runs away
+    const no = document.getElementById("no");
+    const row = document.querySelector(".btn-row");
+    const yes = document.getElementById("yes");
+    let tries = 0;
+    function dodge() {
+      tries++;
+      const maxX = Math.min(row.clientWidth, window.innerWidth) / 2 - 60;
+      const x = (Math.random() * 2 - 1) * Math.max(maxX, 80);
+      const y = (Math.random() * 2 - 1) * 90;
+      no.style.position = "relative";
+      no.style.left = x + "px";
+      no.style.top = y + "px";
+      const lines = [
+        "Hehe, missed! 😜", "Too slow! 💨", "You can't catch it! 🏃",
+        "Teddy is crying... 😭", "Just press Yes 🥺💗"
+      ];
+      Bear.say(lines[Math.min(tries - 1, lines.length - 1)]);
+      Bear.mood("sad");
+      Bear.anim("wiggle");
+      const d = Bear.dirTo(no);
+      Bear.look(d.dx, d.dy);
+      // the Yes button grows each time she tries to say no 😄
+      yes.style.transform = "scale(" + Math.min(1 + tries * 0.12, 1.8) + ")";
+    }
+    no.addEventListener("mouseenter", dodge);
+    no.addEventListener("touchstart", (e) => { e.preventDefault(); dodge(); }, { passive: false });
+    no.addEventListener("click", dodge);
+
+    // "Maybe" slowly turns into a yes 😏
+    const maybe = document.getElementById("maybe");
+    const maybeSteps = [
+      { btn: "Maybe yes? 😏", say: "Maybe YES?! Teddy heard that! 👀" },
+      { btn: "Okay, yes? 🥰", say: "Ooh, it's getting warmer... 🔥💗" },
+      { btn: "YES! 💖", say: "She said yes!!! 🎉", go: true },
+    ];
+    let m = 0;
+    maybe.addEventListener("click", () => {
+      const step = maybeSteps[Math.min(m, maybeSteps.length - 1)];
+      m++;
+      Bear.say(step.say);
+      Bear.mood(step.go ? "love" : "shy");
+      Bear.jump();
+      maybe.textContent = step.btn;
+      if (step.go) {
+        window.confetti(50);
+        setTimeout(() => (window.location.href = "yes.html"), 900);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>She said YES! 🎉</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-mood="love" data-bounce="1" data-confetti="1" data-start-wave="1">
+  <main>
+    <div class="progress">💗 💗 💗 💗 💗</div>
+    <h1>YAYYY!! 🎉💖</h1>
+
+    <div class="bubble" id="yesBubble">I'm the happiest teddy in the world! 🧸💗</div>
+    <div class="bear-wrap"></div>
+
+    <div class="btn-row">
+      <button class="btn soft" id="replay" data-mood="excited" data-hover="Do the party again? 🎉" data-stay="1">Replay 🎉</button>
+      <button class="btn" data-mood="excited" data-say="Hugs! 🤗💞" data-hover="Come here! 🤗" data-confetti="1" data-wave="1" data-anim="boing" data-stay="1">Hug 🤗</button>
+      <button class="btn" data-mood="love" data-say="I like you so much 💘" data-hover="💘💘💘" data-confetti="1" data-anim="spin" data-stay="1">More love 💘</button>
+      <a class="btn soft" href="index.html" target="_self" data-instant="1" data-stay="1" data-mood="happy" data-hover="Go back to the start? ⏮">Start over ⏮</a>
+    </div>
+  </main>
+  <script src="config.js"></script>
+  <script src="bear.js"></script>
+  <script>
+    // Replay = restart the celebration right here (no page reload needed)
+    const replayLines = [
+      "She said YES! Again!! 🎉💖", "Best day ever! 🧸💗", "Teddy is doing a happy dance! 💃🧸",
+      "Yes yes yes yes YES! 🎀", "My heart is going boom boom 💓"
+    ];
+    let r = 0;
+    document.getElementById("replay").addEventListener("click", () => {
+      window.clearConfetti();
+      window.confetti(90);
+      Bear.baseMood = "love";
+      Bear.mood("excited");
+      Bear.say(replayLines[r++ % replayLines.length]);
+      Bear.jump();
+      Bear.wave();
+      Bear.anim("spin");
+      setTimeout(() => Bear.mood("love"), 1200);
+    });
+  </script>
+</body>
+</html>

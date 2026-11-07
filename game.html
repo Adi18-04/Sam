@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Catch the hearts 🎮</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <div class="progress">💗 💗 💗 🤍 🤍</div>
+    <h1>Catch the love! 💖</h1>
+    <p class="sub">Tap the floating 💖 (+1), 🎀 (+2) and 🧸 (+3). Avoid the 💔!<br>Collect 10 to unlock the next page.</p>
+
+    <div class="hud"><div class="bar"><div class="fill" id="fill"></div></div></div>
+    <div class="score-text" id="score">0 / 10</div>
+
+    <div class="bubble" id="gameBubble">Go go go! Teddy believes in you 🧸</div>
+    <div class="bear-wrap"></div>
+
+    <div class="btn-row">
+      <a class="btn soft" href="page2.html" data-mood="happy" data-say="Going back! ⬅️" data-hover="Back we go!">⬅ Back</a>
+      <a class="btn soft" href="ask.html" data-mood="surprised" data-say="Skipping the game? 😮" data-hover="Skip? Really? 😮">Skip ⏭</a>
+      <a class="btn locked" id="next" href="ask.html" data-mood="love" data-say="You did it!! 💖" data-hover="You're amazing! 💖">Next 💌</a>
+    </div>
+  </main>
+  <script src="config.js"></script>
+  <script src="bear.js"></script>
+  <script>
+    const GOAL = 10;
+    let score = 0, won = false;
+    const fill = document.getElementById("fill");
+    const scoreEl = document.getElementById("score");
+    const next = document.getElementById("next");
+
+    function floatText(x, y, text) {
+      const p = document.createElement("span");
+      p.className = "plus";
+      p.textContent = text;
+      p.style.left = x + "px";
+      p.style.top = y + "px";
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 900);
+    }
+
+    function update() {
+      scoreEl.textContent = score + " / " + GOAL;
+      fill.style.width = Math.min(100, (score / GOAL) * 100) + "%";
+    }
+
+    function win() {
+      won = true;
+      document.querySelectorAll(".catchable").forEach((e) => e.remove());
+      Bear.mood("love");
+      Bear.baseMood = "love";
+      Bear.say("YOU DID IT, " + (window.SITE ? window.SITE.herName : "my love") + "! 🎉💖 Teddy is so proud!");
+      Bear.jump(); Bear.anim("spin"); window.confetti(70);
+      next.classList.remove("locked");
+    }
+
+    function collect(el, type, e) {
+      if (won) return;
+      el.classList.add("popped");
+      setTimeout(() => el.remove(), 300);
+      const lines = {
+        heart: ["Gotcha! 💖", "Nice one! 💗", "Love caught! 💕"],
+        ribbon: ["A pretty ribbon! 🎀 +2", "Ooh fancy! 🎀"],
+        bear: ["You found my friend! 🧸 +3", "Teddy hug! 🧸"],
+        broken: ["Oops, not that one! 💔 −1", "Eek, a broken heart! 😢"],
+      }[type];
+      const delta = { heart: 1, ribbon: 2, bear: 3, broken: -1 }[type];
+      score = Math.max(0, score + delta);
+      floatText(e.clientX, e.clientY, (delta > 0 ? "+" : "") + delta);
+      document.getElementById("gameBubble").textContent = lines[Math.floor(Math.random() * lines.length)];
+      if (delta > 0) { Bear.mood("excited"); Bear.jump(); } else { Bear.mood("sad"); Bear.anim("wiggle"); }
+      setTimeout(() => { if (!won) Bear.mood("happy"); }, 600);
+      update();
+      if (score >= GOAL) win();
+    }
+
+    function spawn() {
+      if (won) return;
+      const r = Math.random();
+      let icon, type;
+      if (r < 0.58) { icon = "💖"; type = "heart"; }
+      else if (r < 0.76) { icon = "🎀"; type = "ribbon"; }
+      else if (r < 0.88) { icon = "🧸"; type = "bear"; }
+      else { icon = "💔"; type = "broken"; }
+      const el = document.createElement("span");
+      el.className = "catchable";
+      el.textContent = icon;
+      el.style.left = 4 + Math.random() * 88 + "vw";
+      el.style.fontSize = 34 + Math.random() * 20 + "px";
+      el.style.animationDuration = 5 + Math.random() * 3 + "s";
+      el.addEventListener("pointerdown", (e) => { e.preventDefault(); collect(el, type, e); });
+      el.addEventListener("animationend", () => el.remove());
+      document.body.appendChild(el);
+    }
+
+    update();
+    setInterval(spawn, 650);
+    spawn();
+  </script>
+</body>
+</html>

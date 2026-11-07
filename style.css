@@ -1,0 +1,255 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --pink-1: #ffe1ec;
+  --pink-2: #ffc2d9;
+  --pink-3: #ff8fb8;
+  --pink-4: #ff5c9a;
+  --ink: #7a2a4d;
+}
+
+html, body { height: 100%; }
+
+body {
+  font-family: "Comic Sans MS", "Baloo 2", "Segoe UI", system-ui, sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 20% 15%, #fff4f8 0, transparent 40%),
+    radial-gradient(circle at 85% 80%, #ffd0e2 0, transparent 45%),
+    linear-gradient(160deg, var(--pink-1), var(--pink-2));
+  background-attachment: fixed;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* floating background bears / ribbons / hearts */
+.floaty {
+  position: fixed;
+  bottom: -60px;
+  pointer-events: none;
+  opacity: 0.55;
+  animation: floatUp linear infinite;
+  z-index: 0;
+  user-select: none;
+}
+@keyframes floatUp {
+  0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+  10%  { opacity: 0.6; }
+  100% { transform: translateY(-115vh) rotate(360deg); opacity: 0; }
+}
+
+main {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 24px 16px 40px;
+  text-align: center;
+}
+
+h1 {
+  font-size: clamp(1.6rem, 5vw, 2.6rem);
+  color: var(--pink-4);
+  text-shadow: 2px 2px 0 #fff;
+}
+
+.sub {
+  font-size: clamp(1rem, 3vw, 1.2rem);
+  max-width: 480px;
+}
+
+.progress { font-size: 1.3rem; letter-spacing: 6px; }
+
+/* speech bubble */
+.bubble {
+  position: relative;
+  min-height: 52px;
+  max-width: 360px;
+  padding: 12px 18px;
+  background: #fff;
+  border: 3px solid var(--pink-3);
+  border-radius: 22px;
+  font-size: 1.05rem;
+  box-shadow: 0 6px 0 var(--pink-3);
+  transition: transform 0.2s;
+}
+.bubble::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -16px;
+  width: 20px; height: 20px;
+  background: #fff;
+  border-right: 3px solid var(--pink-3);
+  border-bottom: 3px solid var(--pink-3);
+  transform: translateX(-50%) rotate(45deg);
+}
+.bubble.pop { animation: pop 0.35s ease; }
+@keyframes pop {
+  0% { transform: scale(0.85); } 60% { transform: scale(1.08); } 100% { transform: scale(1); }
+}
+
+/* ---------- bear ---------- */
+/* .bear-wrap = jump / wave layer, .bear-inner = idle + playful animations layer */
+.bear-wrap {
+  width: clamp(210px, 50vw, 310px);
+  margin-top: 8px;
+  filter: drop-shadow(0 12px 14px rgba(214, 80, 130, 0.35));
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.bear-inner { transform-origin: 50% 90%; }
+.bear-wrap svg { width: 100%; height: auto; overflow: visible; display: block; }
+
+.bear-wrap.jump { animation: jump 0.6s ease; }
+@keyframes jump {
+  0% { transform: translateY(0) scale(1, 1); }
+  25% { transform: translateY(6px) scale(1.06, 0.92); }
+  55% { transform: translateY(-40px) scale(0.96, 1.05); }
+  100% { transform: translateY(0) scale(1, 1); }
+}
+
+.bear-inner.bounce { animation: bounce 0.7s ease-in-out infinite; }
+@keyframes bounce {
+  0%,100% { transform: translateY(0) scale(1, 1); }
+  50% { transform: translateY(-26px) scale(0.97, 1.04); }
+}
+.bear-inner.a-wiggle { animation: wiggle 0.7s ease; }
+@keyframes wiggle {
+  0%,100% { transform: rotate(0); } 20% { transform: rotate(-9deg); }
+  40% { transform: rotate(8deg); } 60% { transform: rotate(-6deg); } 80% { transform: rotate(4deg); }
+}
+.bear-inner.a-spin { animation: spin 0.9s ease-in-out; }
+@keyframes spin {
+  0% { transform: rotate(0) scale(1); } 50% { transform: rotate(180deg) scale(1.1); } 100% { transform: rotate(360deg) scale(1); }
+}
+.bear-inner.a-boing { animation: boing 0.8s ease; }
+@keyframes boing {
+  0% { transform: scale(1, 1); } 20% { transform: scale(1.18, 0.82); } 40% { transform: scale(0.86, 1.16); }
+  60% { transform: scale(1.08, 0.94); } 80% { transform: scale(0.97, 1.03); } 100% { transform: scale(1, 1); }
+}
+
+#bear-head { transition: transform 0.35s ease; transform-origin: 100px 100px; }
+#eyes { transition: transform 0.25s ease; }
+.arm { transition: transform 0.4s ease; }
+#armL { transform-origin: 62px 138px; }
+#armR { transform-origin: 138px 138px; }
+.curl { transform-origin: 100px 40px; animation: curlbob 3s ease-in-out infinite; }
+@keyframes curlbob { 0%,100% { transform: rotate(-4deg); } 50% { transform: rotate(5deg); } }
+
+.eye-open { transform-box: fill-box; transform-origin: center; animation: blink 4.5s infinite; }
+@keyframes blink { 0%,94%,100% { transform: scaleY(1); } 97% { transform: scaleY(0.08); } }
+
+.wave #armR { animation: wave 0.5s ease-in-out 3; }
+@keyframes wave {
+  0%,100% { transform: rotate(-130deg); } 50% { transform: rotate(-95deg); }
+}
+
+/* mood layers: hide everything, then show what the mood needs */
+.m-smile, .m-big, .m-o, .m-sad, .eye-open, .eye-arc, .eye-heart, .tear, .brows { display: none; }
+.blush { opacity: 0.55; transition: opacity 0.3s; }
+
+.mood-happy .m-smile, .mood-happy .eye-open { display: block; }
+.mood-excited .m-big, .mood-excited .eye-arc { display: block; }
+.mood-excited .blush { opacity: 0.9; }
+.mood-love .m-smile, .mood-love .eye-heart { display: block; }
+.mood-love .blush { opacity: 1; }
+.mood-shy .m-smile, .mood-shy .eye-open { display: block; }
+.mood-shy .blush { opacity: 1; }
+.mood-shy #armL { transform: rotate(150deg); }
+.mood-shy #armR { transform: rotate(-150deg); }
+.mood-surprised .m-o, .mood-surprised .eye-open { display: block; }
+.mood-sad .m-sad, .mood-sad .eye-open, .mood-sad .brows, .mood-sad .tear { display: block; }
+.mood-sad .blush { opacity: 0.2; }
+
+/* ---------- buttons (arranged left to right) ---------- */
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin-top: 10px;
+  min-height: 70px;
+  position: relative;
+  max-width: 760px;
+}
+.btn {
+  display: inline-block;
+  padding: 13px 24px;
+  font-family: inherit;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--pink-4);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 6px 0 #d63a78;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.2s, opacity 0.3s;
+  position: relative;
+}
+.btn:hover { transform: translateY(-3px) scale(1.06); background: #ff74ab; box-shadow: 0 9px 0 #d63a78; }
+.btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #d63a78; }
+.btn.soft { background: #fff; color: var(--pink-4); box-shadow: 0 6px 0 var(--pink-3); }
+.btn.soft:hover { background: #fff5f9; box-shadow: 0 9px 0 var(--pink-3); }
+.btn.dodge { transition: left 0.25s ease, top 0.25s ease, transform 0.15s; }
+.btn.locked { opacity: 0.45; pointer-events: none; filter: grayscale(0.4); }
+
+/* confetti */
+.confetti {
+  position: fixed;
+  top: -30px;
+  pointer-events: none;
+  z-index: 5;
+  animation: fall linear forwards;
+}
+@keyframes fall { to { transform: translateY(115vh) rotate(540deg); } }
+
+.note { font-size: 0.85rem; opacity: 0.8; margin-top: 6px; }
+
+/* ---------- catch-the-hearts game ---------- */
+.hud {
+  width: min(320px, 80vw);
+  background: #fff;
+  border: 3px solid var(--pink-3);
+  border-radius: 999px;
+  padding: 6px;
+  box-shadow: 0 5px 0 var(--pink-3);
+}
+.hud .bar { height: 16px; border-radius: 999px; background: #ffe1ec; overflow: hidden; }
+.hud .fill { height: 100%; width: 0%; border-radius: 999px; background: linear-gradient(90deg, #ff8fb8, #ff3d81); transition: width 0.3s; }
+.score-text { font-size: 1.2rem; font-weight: 700; color: var(--pink-4); }
+
+.catchable {
+  position: fixed;
+  bottom: -70px;
+  z-index: 4;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  animation: riseUp linear forwards;
+  filter: drop-shadow(0 4px 6px rgba(214, 80, 130, 0.35));
+}
+@keyframes riseUp {
+  0% { transform: translateY(0) rotate(-8deg); }
+  50% { transform: translateY(-60vh) rotate(8deg); }
+  100% { transform: translateY(-120vh) rotate(-8deg); }
+}
+.catchable.popped { animation: popOut 0.3s ease-out forwards; pointer-events: none; }
+@keyframes popOut { to { transform: scale(2.2); opacity: 0; } }
+.plus {
+  position: fixed;
+  z-index: 6;
+  font-weight: 700;
+  color: var(--pink-4);
+  pointer-events: none;
+  text-shadow: 1px 1px 0 #fff;
+  animation: plusUp 0.8s ease-out forwards;
+}
+@keyframes plusUp { to { transform: translateY(-50px); opacity: 0; } }
